@@ -83,6 +83,12 @@ HTMLActuator.prototype.addTile = function (tile) {
     this.applyClasses(wrapper, classes);
   }
 
+  var textSize = document.querySelector('#textSize');
+  textSize.textContent = tile.value;
+  if (textSize.clientWidth >= 20) {
+    inner.style.fontSize = (20.0 / textSize.clientWidth * 55) + 'px';
+  }
+
   // Add the inner part of the tile to the wrapper
   wrapper.appendChild(inner);
 
