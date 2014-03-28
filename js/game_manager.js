@@ -142,6 +142,13 @@ GameManager.prototype.moveTile = function (tile, cell) {
   tile.updatePosition(cell);
 };
 
+function canMerge(a, b) {
+  a = a.charAt(0);
+  b = b.charAt(b.length - 1);
+  return (a == 'a' || a == 'e' || a == 'i' || a == 'o' || a == 'u' ||
+          b == 'a' || b == 'e' || b == 'i' || b == 'o' || b == 'u');
+}
+
 // Move tiles on the grid in the specified direction
 GameManager.prototype.move = function (direction) {
   // 0: up, 1: right, 2: down, 3: left
@@ -158,6 +165,8 @@ GameManager.prototype.move = function (direction) {
   // Save the current tile positions and remove merger information
   this.prepareTiles();
 
+  var removals = [];
+
   // Traverse the grid in the right direction and move tiles
   traversals.x.forEach(function (x) {
     traversals.y.forEach(function (y) {
@@ -169,8 +178,8 @@ GameManager.prototype.move = function (direction) {
         var next      = self.grid.cellContent(positions.next);
 
         // Only one merger per row traversal?
-        if (next && next.value === tile.value && !next.mergedFrom) {
-          var merged = new Tile(positions.next, tile.value * 2);
+        if (next && canMerge(next.value, tile.value) && !next.mergedFrom) {
+          var merged = new Tile(positions.next, tile.value + next.value);
           merged.mergedFrom = [tile, next];
 
           self.grid.insertTile(merged);
@@ -180,10 +189,15 @@ GameManager.prototype.move = function (direction) {
           tile.updatePosition(positions.next);
 
           // Update the score
-          self.score += merged.value;
+          self.score += merged.value.length;
 
           // The mighty 2048 tile
           if (merged.value === 2048) self.won = true;
+
+          if (merged.value.length > 10) {
+            removals.push(merged);
+            self.wordList.push(merged.value);
+          }
         } else {
           self.moveTile(tile, positions.farthest);
         }
@@ -193,6 +207,10 @@ GameManager.prototype.move = function (direction) {
         }
       }
     });
+  });
+
+  removals.forEach(function (tile) {
+    self.grid.removeTile(tile);
   });
 
   if (moved) {
@@ -272,7 +290,7 @@ GameManager.prototype.tileMatchesAvailable = function () {
 
           var other  = self.grid.cellContent(cell);
 
-          if (other && other.value === tile.value) {
+          if (other && canMerge(other.value, tile.value)) {
             return true; // These two tiles can be merged
           }
         }
