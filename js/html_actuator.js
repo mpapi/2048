@@ -1,8 +1,9 @@
 function HTMLActuator() {
-  this.tileContainer    = document.querySelector(".tile-container");
-  this.scoreContainer   = document.querySelector(".score-container");
-  this.bestContainer    = document.querySelector(".best-container");
-  this.messageContainer = document.querySelector(".game-message");
+  this.tileContainer      = document.querySelector(".tile-container");
+  this.scoreContainer     = document.querySelector(".score-container");
+  this.bestContainer      = document.querySelector(".best-container");
+  this.messageContainer   = document.querySelector(".game-message");
+  this.nextTilesContainer = document.querySelector(".next-tiles");
 
   this.score = 0;
 }
@@ -23,6 +24,7 @@ HTMLActuator.prototype.actuate = function (grid, metadata) {
 
     self.updateScore(metadata.score);
     self.updateBestScore(metadata.bestScore);
+    self.updateNextTiles(metadata.nextTiles);
 
     if (metadata.terminated) {
       if (metadata.over) {
@@ -142,4 +144,8 @@ HTMLActuator.prototype.clearMessage = function () {
   // IE only takes one value to remove at a time.
   this.messageContainer.classList.remove("game-won");
   this.messageContainer.classList.remove("game-over");
+};
+
+HTMLActuator.prototype.updateNextTiles = function (nextTiles) {
+  this.nextTilesContainer.textContent = nextTiles.toString();
 };

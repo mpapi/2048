@@ -10,6 +10,9 @@ function GameManager(size, InputManager, Actuator, StorageManager) {
   this.inputManager.on("restart", this.restart.bind(this));
   this.inputManager.on("keepPlaying", this.keepPlaying.bind(this));
 
+  this.bufferSize     = 3;
+  this.nextTiles      = [];
+
   this.setup();
 }
 
@@ -62,8 +65,16 @@ GameManager.prototype.setup = function () {
   this.actuate();
 };
 
+GameManager.prototype.nextTile = function () {
+  this.nextTiles.push(String.fromCharCode(97 + Math.floor(Math.random() * 26)));
+  return this.nextTiles.shift();
+};
+
 // Set up the initial tiles to start the game with
 GameManager.prototype.addStartTiles = function () {
+  for (var i = 0; i < this.bufferSize; i++) {
+    this.nextTiles.push(String.fromCharCode(97 + Math.floor(Math.random() * 26)));
+  }
   for (var i = 0; i < this.startTiles; i++) {
     this.addRandomTile();
   }
@@ -72,7 +83,7 @@ GameManager.prototype.addStartTiles = function () {
 // Adds a tile in a random position
 GameManager.prototype.addRandomTile = function () {
   if (this.grid.cellsAvailable()) {
-    var value = Math.random() < 0.9 ? 2 : 4;
+    var value = this.nextTile();
     var tile = new Tile(this.grid.randomAvailableCell(), value);
 
     this.grid.insertTile(tile);
@@ -97,7 +108,8 @@ GameManager.prototype.actuate = function () {
     over:       this.over,
     won:        this.won,
     bestScore:  this.storageManager.getBestScore(),
-    terminated: this.isGameTerminated()
+    terminated: this.isGameTerminated(),
+    nextTiles:  this.nextTiles.slice(0, 3),
   });
 
 };
