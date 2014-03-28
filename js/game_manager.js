@@ -12,6 +12,7 @@ function GameManager(size, InputManager, Actuator, StorageManager) {
 
   this.bufferSize     = 3;
   this.nextTiles      = [];
+  this.wordList       = [];
 
   this.setup();
 }
@@ -110,6 +111,7 @@ GameManager.prototype.actuate = function () {
     bestScore:  this.storageManager.getBestScore(),
     terminated: this.isGameTerminated(),
     nextTiles:  this.nextTiles.slice(0, 3),
+    wordList:   this.wordList
   });
 
 };

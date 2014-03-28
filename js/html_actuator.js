@@ -4,6 +4,7 @@ function HTMLActuator() {
   this.bestContainer      = document.querySelector(".best-container");
   this.messageContainer   = document.querySelector(".game-message");
   this.nextTilesContainer = document.querySelector(".next-tiles");
+  this.wordListContainer  = document.querySelector(".word-list");
 
   this.score = 0;
 }
@@ -25,6 +26,7 @@ HTMLActuator.prototype.actuate = function (grid, metadata) {
     self.updateScore(metadata.score);
     self.updateBestScore(metadata.bestScore);
     self.updateNextTiles(metadata.nextTiles);
+    self.updateWordList(metadata.wordList);
 
     if (metadata.terminated) {
       if (metadata.over) {
@@ -148,4 +150,8 @@ HTMLActuator.prototype.clearMessage = function () {
 
 HTMLActuator.prototype.updateNextTiles = function (nextTiles) {
   this.nextTilesContainer.textContent = nextTiles.toString();
+};
+
+HTMLActuator.prototype.updateWordList = function (wordList) {
+  this.wordListContainer.textContent = wordList.toString();
 };
