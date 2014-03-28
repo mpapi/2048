@@ -1,0 +1,42 @@
+// Created by running 'create_dict_js.py'
+//
+// Requires jinja2.
+//
+
+var legal_words = {{ '{}' }};
+
+{% for word in words|sort -%}
+legal_words["{{ word }}"] = true;
+{% endfor %}
+
+var legal_fragments = {{ '{}' }};
+
+{% for fragment in fragments|sort -%}
+legal_fragments["{{ fragment }}"] = true;
+{% endfor %}
+
+{% raw %}
+function is_legal_fragment(fragment)
+{
+    if(legal_fragments[fragment])
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+function is_legal_word(fragment)
+{
+    if(legal_words[fragment])
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+{% endraw %}
