@@ -145,10 +145,8 @@ GameManager.prototype.moveTile = function (tile, cell) {
 };
 
 function canMerge(a, b) {
-  a = a.charAt(0);
-  b = b.charAt(b.length - 1);
-  return (a == 'a' || a == 'e' || a == 'i' || a == 'o' || a == 'u' ||
-          b == 'a' || b == 'e' || b == 'i' || b == 'o' || b == 'u');
+  console.debug(a, b, a + b, b + a);
+  return is_legal_fragment(b + a) || is_legal_word(b + a);
 }
 
 // Move tiles on the grid in the specified direction
@@ -196,7 +194,7 @@ GameManager.prototype.move = function (direction) {
           // The mighty 2048 tile
           if (merged.value === 2048) self.won = true;
 
-          if (merged.value.length > 10) {
+          if (is_legal_word(merged.value)) {
             removals.push(merged);
             self.wordList.push(merged.value);
           }
