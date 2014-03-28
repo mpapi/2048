@@ -66,15 +66,17 @@ GameManager.prototype.setup = function () {
   this.actuate();
 };
 
+var letters = 'aaaaaabcdeeeeeefghiiiiiijklmnoooooopqrrrssstttuuuuuuvwxyz';
+
 GameManager.prototype.nextTile = function () {
-  this.nextTiles.push(String.fromCharCode(97 + Math.floor(Math.random() * 26)));
+  this.nextTiles.push(letters[Math.floor(Math.random() * letters.length)]);
   return this.nextTiles.shift();
 };
 
 // Set up the initial tiles to start the game with
 GameManager.prototype.addStartTiles = function () {
   for (var i = 0; i < this.bufferSize; i++) {
-    this.nextTiles.push(String.fromCharCode(97 + Math.floor(Math.random() * 26)));
+    this.nextTiles.push(letters[Math.floor(Math.random() * letters.length)]);
   }
   for (var i = 0; i < this.startTiles; i++) {
     this.addRandomTile();
